@@ -1,49 +1,58 @@
 Numele direcotrului este test
-In_nod-ul este 1035143
+In_nod-ul este 13267750
 Dimensiunea este 4096
-
-Numele este test/2
-Caracteristicile sunt: 
-In_nod-ul este 1035147
-Dimensiunea este 0
 
 Numele este test/3
 Caracteristicile sunt: 
-In_nod-ul este 1035148
+In_nod-ul este 13267753
 Dimensiunea este 4096
+Data ultimei modifcari este 2024-04-03 10:47:18
 
 Numele este test/3/5
 Caracteristicile sunt: 
-In_nod-ul este 1035165
+In_nod-ul este 13267755
 Dimensiunea este 4096
-
-Numele este test/3/5/7
-Caracteristicile sunt: 
-In_nod-ul este 1035167
-Dimensiunea este 0
-
-Numele este test/3/5/6
-Caracteristicile sunt: 
-In_nod-ul este 1035166
-Dimensiunea este 0
+Data ultimei modifcari este 2024-04-03 10:47:18
 
 Numele este test/3/5/8
 Caracteristicile sunt: 
-In_nod-ul este 1035168
+In_nod-ul este 13267758
 Dimensiunea este 4096
+Data ultimei modifcari este 2024-04-03 10:47:18
 
 Numele este test/3/5/8/9
 Caracteristicile sunt: 
-In_nod-ul este 1035169
-Dimensiunea este 0
+In_nod-ul este 13267759
+Dimensiunea este 13
+Data ultimei modifcari este 2024-04-03 10:59:06
+
+Numele este test/3/5/7
+Caracteristicile sunt: 
+In_nod-ul este 13267757
+Dimensiunea este 26
+Data ultimei modifcari este 2024-04-03 10:59:12
+
+Numele este test/3/5/6
+Caracteristicile sunt: 
+In_nod-ul este 13267756
+Dimensiunea este 14
+Data ultimei modifcari este 2024-04-03 10:59:09
 
 Numele este test/3/4
 Caracteristicile sunt: 
-In_nod-ul este 1035164
-Dimensiunea este 0
+In_nod-ul este 13267754
+Dimensiunea este 10
+Data ultimei modifcari este 2024-04-03 10:59:15
 
 Numele este test/1
 Caracteristicile sunt: 
-In_nod-ul este 1035146
-Dimensiunea este 0
+In_nod-ul este 13267751
+Dimensiunea este 25
+Data ultimei modifcari este 2024-04-03 10:59:20
+
+Numele este test/2
+Caracteristicile sunt: 
+In_nod-ul este 13267752
+Dimensiunea este 23
+Data ultimei modifcari este 2024-04-03 10:59:29
 

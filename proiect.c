@@ -53,7 +53,15 @@ void parse_director(char *dir_path)
             exit(-1);   
         }
 
-        sprintf(aux,"Dimensiunea este %ld\n\n",in_nod.st_size);
+        sprintf(aux,"Dimensiunea este %ld\n",in_nod.st_size);
+        if((write(snapfd,aux,strlen(aux)))<0)
+        {
+            perror(NULL);
+            exit(-1);   
+        }
+        char time[50];
+        strftime(time, 50, "%Y-%m-%d %H:%M:%S", localtime(&in_nod.st_mtime));
+        sprintf(aux,"Data ultimei modifcari este %s\n\n",time);
         if((write(snapfd,aux,strlen(aux)))<0)
         {
             perror(NULL);
@@ -90,7 +98,7 @@ int main(int argc,char **argv)
     }
     int snapfd;
     char *snap="snapshot.txt";
-    if((snapfd=open(snap,O_CREAT | O_WRONLY,S_IRUSR| S_IWUSR| S_IXUSR))<0)
+    if((snapfd=open(snap,O_CREAT | O_TRUNC | O_WRONLY,S_IRUSR| S_IWUSR| S_IXUSR))<0)
         {
             perror("eroare la deschidere snapshot ");
             exit(-1);   
