@@ -82,7 +82,7 @@ void parse_director(char *dir_path)
         perror(NULL);
         exit(-1);
     }
-}
+}//a/dssasadsad
 int main(int argc,char **argv)
 {
     if(argc<2)
