@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <dirent.h>
 #include <time.h>
-void parse_director(char *dir_path)
+void parse_directory(char *dir_path,int fd,char *myfile)
 {
     DIR *dir;
     if((dir=opendir(dir_path))==NULL)
@@ -17,8 +17,72 @@ void parse_director(char *dir_path)
     }
     struct dirent *file;
     char path[300];//cale relativa catre fisier(director sau file)
-    int snapfd;
-    char *snap="snapshot.txt";
+    
+    while((file=readdir(dir))!=NULL)
+    {
+        if(strcmp(file->d_name,".")==0 || strcmp(file->d_name,"..")==0)
+            continue;
+        sprintf(path,"%s/%s",dir_path,file->d_name);
+
+        char aux[400];
+        sprintf(aux,"%s,",path);
+        if((write(fd,aux,strlen(aux)))<0)
+        {
+            perror(NULL);
+            exit(-1);   
+        }
+
+        struct stat in_nod;
+        if(stat(path,&in_nod)<0)
+        {
+            perror(NULL);
+            exit(-1);
+        }
+        sprintf(aux,"%ld,",in_nod.st_ino);
+        if((write(fd,aux,strlen(aux)))<0)
+        {
+            perror(NULL);
+            exit(-1);   
+        }
+
+        sprintf(aux,"%ld,",in_nod.st_size);
+        if((write(fd,aux,strlen(aux)))<0)
+        {
+            perror(NULL);
+            exit(-1);   
+        }
+        char time[50];
+        strftime(time, 50, "%Y-%m-%d %H:%M:%S", localtime(&in_nod.st_mtime));
+        sprintf(aux,"Data ultimei modifcari este %s\n",time);
+        if((write(fd,aux,strlen(aux)))<0)
+        {
+            perror(NULL);
+            exit(-1);   
+        }
+
+        mode_t type=in_nod.st_mode;
+        if(S_ISDIR(type))   
+        {
+            parse_directory(path,fd,myfile);
+
+        }
+    }
+    if(closedir(dir))
+    {
+        perror("eroare la inchiderea directorului ");
+        exit(-1);
+    }
+}
+void snap_directory(char *dir_path,int snapfd,char *snap)
+{
+    DIR *dir;
+    if((dir=opendir(dir_path))==NULL)
+    {
+        perror(NULL);
+        exit(-1);
+    }
+    struct dirent *file;
+    char path[300];//cale relativa catre fisier(director sau file)
     while((file=readdir(dir))!=NULL)
     {
         if(strcmp(file->d_name,".")==0 || strcmp(file->d_name,"..")==0)
@@ -80,7 +144,7 @@ void parse_director(char *dir_path)
         perror(NULL);
         exit(-1);
     }
-}//a/dssasadsad
+}
 int main(int argc,char **argv)
 {
     if(argc<2)
@@ -136,7 +200,6 @@ int main(int argc,char **argv)
             perror(NULL);
             exit(-1);   
     }
-
     if(close(snapfd)<0)
         {
             perror(NULL);
@@ -147,6 +210,20 @@ int main(int argc,char **argv)
         perror(NULL);
         exit(-1);
     }
-    parse_director(argv[1]);
+    
+    // int fd_myfile;
+    // char *myfile="latest_data.txt";
+    // if((fd_myfile=open(myfile,O_CREAT | O_TRUNC | O_WRONLY,S_IRUSR| S_IWUSR| S_IXUSR))<0)
+    //     {
+    //         perror("eroare la deschidere myfile ");
+    //         exit(-1);   
+    //     }
+    // parse_directory(argv[1],fd_myfile,myfile);
+    // if(close(fd_myfile)<0)
+    //     {
+    //         perror(NULL);
+    //         exit(-1);  
+    //     }
+    
     return 0;
 }
