@@ -1,58 +1,71 @@
 Numele direcotrului este test
-In_nod-ul este 13267750
+In_nod-ul este 1407374883648469
 Dimensiunea este 4096
-
-Numele este test/3
-Caracteristicile sunt: 
-In_nod-ul este 13267753
-Dimensiunea este 4096
-Data ultimei modifcari este 2024-04-03 10:47:18
-
-Numele este test/3/5
-Caracteristicile sunt: 
-In_nod-ul este 13267755
-Dimensiunea este 4096
-Data ultimei modifcari este 2024-04-03 10:47:18
-
-Numele este test/3/5/8
-Caracteristicile sunt: 
-In_nod-ul este 13267758
-Dimensiunea este 4096
-Data ultimei modifcari este 2024-04-03 10:47:18
-
-Numele este test/3/5/8/9
-Caracteristicile sunt: 
-In_nod-ul este 13267759
-Dimensiunea este 13
-Data ultimei modifcari este 2024-04-03 10:59:06
-
-Numele este test/3/5/7
-Caracteristicile sunt: 
-In_nod-ul este 13267757
-Dimensiunea este 26
-Data ultimei modifcari este 2024-04-03 10:59:12
-
-Numele este test/3/5/6
-Caracteristicile sunt: 
-In_nod-ul este 13267756
-Dimensiunea este 14
-Data ultimei modifcari este 2024-04-03 10:59:09
-
-Numele este test/3/4
-Caracteristicile sunt: 
-In_nod-ul este 13267754
-Dimensiunea este 10
-Data ultimei modifcari este 2024-04-03 10:59:15
+Data ultimei modifcari este 2024-04-08 15:22:09
 
 Numele este test/1
 Caracteristicile sunt: 
-In_nod-ul este 13267751
-Dimensiunea este 25
-Data ultimei modifcari este 2024-04-03 10:59:20
+In_nod-ul este 1407374883648479
+Dimensiunea este 33
+Data ultimei modifcari este 2024-04-08 14:44:06
 
 Numele este test/2
 Caracteristicile sunt: 
-In_nod-ul este 13267752
-Dimensiunea este 23
-Data ultimei modifcari este 2024-04-03 10:59:29
+In_nod-ul este 1407374883648493
+Dimensiunea este 29
+Data ultimei modifcari este 2024-04-08 15:19:51
+
+Numele este test/3
+Caracteristicile sunt: 
+In_nod-ul este 1407374883648503
+Dimensiunea este 4096
+Data ultimei modifcari este 2024-04-04 19:25:01
+
+Numele este test/3/4
+Caracteristicile sunt: 
+In_nod-ul este 1407374883648505
+Dimensiunea este 10
+Data ultimei modifcari este 2024-04-04 19:25:01
+
+Numele este test/3/5
+Caracteristicile sunt: 
+In_nod-ul este 1407374883648509
+Dimensiunea este 4096
+Data ultimei modifcari este 2024-04-04 19:25:01
+
+Numele este test/3/5/6
+Caracteristicile sunt: 
+In_nod-ul este 1407374883648510
+Dimensiunea este 18
+Data ultimei modifcari este 2024-04-08 15:19:56
+
+Numele este test/3/5/7
+Caracteristicile sunt: 
+In_nod-ul este 1407374883648512
+Dimensiunea este 26
+Data ultimei modifcari este 2024-04-04 19:25:01
+
+Numele este test/3/5/8
+Caracteristicile sunt: 
+In_nod-ul este 1407374883648519
+Dimensiunea este 4096
+Data ultimei modifcari este 2024-04-04 19:25:02
+
+Numele este test/3/5/8/9
+Caracteristicile sunt: 
+In_nod-ul este 10414574138389513
+Dimensiunea este 13
+Data ultimei modifcari este 2024-04-04 19:25:02
+
+Numele este test/asss
+Caracteristicile sunt: 
+In_nod-ul este 3659174697273464
+Dimensiunea este 1
+Data ultimei modifcari este 2024-04-08 15:22:12
+
+Numele este test/e
+Caracteristicile sunt: 
+In_nod-ul este 18858823439698044
+Dimensiunea este 0
+Data ultimei modifcari este 2024-04-08 15:20:16
 

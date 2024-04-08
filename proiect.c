@@ -21,8 +21,6 @@ void parse_director(char *dir_path)
     char *snap="snapshot.txt";
     while((file=readdir(dir))!=NULL)
     {
-        // struct stat fileStat;
-        // stat(argv[1],&fileStat);
         if(strcmp(file->d_name,".")==0 || strcmp(file->d_name,"..")==0)
             continue;
         sprintf(path,"%s/%s",dir_path,file->d_name);
@@ -124,13 +122,21 @@ int main(int argc,char **argv)
             exit(-1);   
         }
 
-    sprintf(aux,"Dimensiunea este %ld\n\n",in_nod.st_size);
+    sprintf(aux,"Dimensiunea este %ld\n",in_nod.st_size);
     if((write(snapfd,aux,strlen(aux)))<0)
         {
             perror(NULL);
             exit(-1);   
         }
-    
+    char time[50];
+    strftime(time, 50, "%Y-%m-%d %H:%M:%S", localtime(&in_nod.st_mtime));
+    sprintf(aux,"Data ultimei modifcari este %s\n\n",time);
+    if((write(snapfd,aux,strlen(aux)))<0)
+    {
+            perror(NULL);
+            exit(-1);   
+    }
+
     if(close(snapfd)<0)
         {
             perror(NULL);
