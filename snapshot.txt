@@ -3,3 +3,9 @@ In_nod-ul este 1407374883648469
 Dimensiunea este 4096
 Data ultimei modifcari este 2024-04-08 15:22:09
 
+Numele este test/1
+Caracteristicile sunt: 
+In_nod-ul este 1407374883648479
+Dimensiunea este 33
+Data ultimei modifcari este 2024-04-08 14:44:06
+
