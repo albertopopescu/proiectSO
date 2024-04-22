@@ -14,50 +14,51 @@ typedef struct
     char data[200];
     char tip;//d-director,f-fisier
 }File_Info;
-void extract_File_Info(char *snapshot,File_Info f[100],int *size)
+int run_count()
 {
-    int snapfd;
-    if((snapfd=open(snapshot,O_RDONLY ))<0)
+    int fd;
+    int count;
+
+    // Încercăm să deschidem fișierul pentru citire și scriere
+    fd = open("run_count.bin", O_RDWR);
+
+    if (fd == -1) {
+        // Dacă fișierul nu există, îl cream și începem numărătoarea de la 1
+        fd = open("run_count.bin", O_RDWR | O_CREAT, 0666);
+        if (fd == -1) {
+            perror("eroare deschidere fisier");
+        }
+        count = 1;
+    } 
+    else 
     {
-        perror("eroare deschidere snaphot ");
-        exit(-1);   
+        // Citim numărul de rulări actuale din fișier
+        if (read(fd, &count, sizeof(int)) == -1) {
+            perror("eroare citire");
+            exit(-1);
+        }
+        count++;
     }
-    struct stat statbuf;
-    if(stat(snapfd,&statbuf)<-1)
-    {
-        perror(NULL);
+
+    // Ne întoarcem la începutul fișierului pentru a scrie noua valoare
+    if (lseek(fd, 0, SEEK_SET) == -1) {
+        perror("eroare seeking");
         exit(-1);
     }
-     // Alocăm un buffer pentru a citi întregul conținut al fișierului.
-    char *buffer = malloc(statbuf.st_size + 1);
-    if (read(snapfd, buffer, statbuf.st_size) != statbuf.st_size) {
-        // Eroare la citirea fișierului.
-        printf("eroare la citire in buffer");
-        return;
-    }
-    buffer[statbuf.st_size] = '\0'; // Asigurăm că buffer-ul este un string valid.
 
-    // Parsăm buffer-ul linie cu linie.
-    char *line = strtok(buffer, "\n");
-    while (line) {
-        if (strncmp(line, "Numele fisierlui este ", 12) == 0) {
-            // Avem o linie cu numele fișierului.
-            f = realloc(f, (*size + 1) * sizeof(File_Info));
-            strcpy(f[(*size)++].path, line + 12); // Sărim peste "Numele este ".
-            line = strtok(NULL, "\n");  // Trecem la următoarea linie pentru carac.
-            line = strtok(NULL, "\n");//trecem la innode
-            strcmp(f[*size-1].innode,line+10);
-            line = strtok(NULL, "\n");//trecem la dimensiune
-            strcmp(f[*size-1].size, line + 17);
+    // Convertim numărul de rulări înapoi în șir de caractere și îl scriem înapoi în fișier
+    if (write(fd, &count, sizeof(int)) == -1) {
+        perror("Error writing to file");
+        exit(-1);
+    }
+
+    // Închidem fișierul
+    if(close(fd)<0)
+        {
+            perror(NULL);
+            exit(-1);  
         }
-        line = strtok(NULL, "\n"); // Trecem la următoarea linie.
-    }
-
-    if(close(snapfd)<0)
-    {
-        perror(NULL);
-        exit(-1);  
-    }
+    return count;
 }
 void parse_director(char *dir_path)
 {
@@ -135,6 +136,7 @@ void parse_director(char *dir_path)
 }
 int main(int argc,char **argv)
 {
+    
     if(argc<2)
     {
         printf("eroare de argumente");
@@ -199,6 +201,8 @@ int main(int argc,char **argv)
         perror(NULL);
         exit(-1);
     }
+    int count=run_count();
+    printf("nr rulari este %d\n",count);
     parse_director(argv[1]);
     return 0;
 }
