@@ -22,7 +22,7 @@ void stergere_prev(File_Info *v, int *size_v, int poz)
         v[i] = v[i + 1];
     *size_v = *size_v - 1;
 }
-void parse_director(char *dir_path, int nr_rulari)
+void parse_director(char *dir_path, int nr_rulari,char *snap)
 {
     DIR *dir;
     if ((dir = opendir(dir_path)) == NULL)
@@ -33,7 +33,6 @@ void parse_director(char *dir_path, int nr_rulari)
     struct dirent *file;
     char path[300]; // cale relativa catre fisier(director sau file)
     int snapfd;
-    char *snap = "snapshot.txt";
     File_Info *v = NULL;
     int size_v = 0, prev_snapfd, j;
 
@@ -289,10 +288,11 @@ void parse_director(char *dir_path, int nr_rulari)
 void parse_and_delete(char *dir_path, int nr_rulari)
 {
     size_array = 0;
-    parse_director(dir_path, nr_rulari);
+    char *snap="snapshot.txt";
+    parse_director(dir_path, nr_rulari,snap);
     File_Info *v=NULL;
     int size_v=0,snapfd,prev_snapfd;
-    char *snap="snapshot.txt";
+    //char *snap="snapshot.txt";
     if (nr_rulari >= 2)
     {
         if ((snapfd = open(snap, O_WRONLY | O_APPEND)) < 0)
@@ -325,7 +325,7 @@ void parse_and_delete(char *dir_path, int nr_rulari)
                 }
             if (ok == 1)
             {
-                char str[100];
+                char str[500];
                 sprintf(str, "Fata de rularea anterioara s-a sters fisierul cu denumirea %s si innode-ul %ld\n\n", v[i].path, v[i].innode);
                 if ((write(snapfd, str, strlen(str))) < 0)
                 {
