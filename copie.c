@@ -22,7 +22,7 @@ void stergere_prev(File_Info *v, int *size_v, int poz)
         v[i] = v[i + 1];
     *size_v = *size_v - 1;
 }
-void parse_director(char *dir_path, int nr_rulari,char *snap)
+void parse_director(char *dir_path, int nr_rulari, char *snap,char *prev_snap)
 {
     DIR *dir;
     if ((dir = opendir(dir_path)) == NULL)
@@ -62,10 +62,10 @@ void parse_director(char *dir_path, int nr_rulari,char *snap)
 
         if (nr_rulari == 1)
         {
-            prev_snapfd = open("prev_snap.bin", O_WRONLY);
+            prev_snapfd = open(prev_snap, O_WRONLY);
             if (prev_snapfd == -1) // pt atunci cand acest prev_snap este prima data creat
             {
-                if ((prev_snapfd = open("prev_snap.bin", O_WRONLY | O_CREAT, 0666)) < 0)
+                if ((prev_snapfd = open(prev_snap, O_WRONLY | O_CREAT, 0666)) < 0)
                 {
                     perror("eroare deschidere snaphot1 ");
                     exit(-1);
@@ -83,7 +83,7 @@ void parse_director(char *dir_path, int nr_rulari,char *snap)
             {
                 // size_v = 0;
                 // v = NULL;
-                if ((prev_snapfd = open("prev_snap.bin", O_RDONLY)) < 0)
+                if ((prev_snapfd = open(prev_snap, O_RDONLY)) < 0)
                 {
                     perror("eroare deschidere snaphot1 ");
                     exit(-1);
@@ -123,7 +123,7 @@ void parse_director(char *dir_path, int nr_rulari,char *snap)
             //            i, v[i].path, v[i].size, v[i].last_modify, v[i].innode, v[i].tip);
             // }
 
-            if ((prev_snapfd = open("prev_snap.bin", O_WRONLY)) < 0)
+            if ((prev_snapfd = open(prev_snap, O_WRONLY)) < 0)
             {
                 perror("eroare deschidere snaphot1 ");
                 exit(-1);
@@ -152,7 +152,7 @@ void parse_director(char *dir_path, int nr_rulari,char *snap)
         }
         else // daca programul se afla la cel putin a 2 a rulare
         {
-            if ((prev_snapfd = open("prev_snap.bin", O_RDWR)) < 0)
+            if ((prev_snapfd = open(prev_snap, O_RDWR)) < 0)
             {
                 perror("eroare deschidere snapshot1 ");
                 exit(-1);
@@ -276,7 +276,7 @@ void parse_director(char *dir_path, int nr_rulari,char *snap)
             exit(-1);
         }
         if (S_ISDIR(type))
-            parse_director(path, nr_rulari);
+            parse_director(path, nr_rulari, snap,prev_snap);
     }
 
     if (closedir(dir))
@@ -285,14 +285,16 @@ void parse_director(char *dir_path, int nr_rulari,char *snap)
         exit(-1);
     }
 }
-void parse_and_delete(char *dir_path, int nr_rulari)
+void parse_and_delete(char *dir_path, int nr_rulari,char *director)
 {
     size_array = 0;
-    char *snap="snapshot.txt";
-    parse_director(dir_path, nr_rulari,snap);
-    File_Info *v=NULL;
-    int size_v=0,snapfd,prev_snapfd;
-    //char *snap="snapshot.txt";
+    char snap[100],prev_snap[100];
+    sprintf(snap, "%s/%s_snapshot.txt", director,dir_path);
+    sprintf(prev_snap,"%s/%s_prev_snap.bin",director,dir_path);
+    parse_director(dir_path, nr_rulari, snap,prev_snap);
+    File_Info *v = NULL;
+    int size_v = 0, snapfd, prev_snapfd;
+    // char *snap="snapshot.txt";
     if (nr_rulari >= 2)
     {
         if ((snapfd = open(snap, O_WRONLY | O_APPEND)) < 0)
@@ -300,7 +302,7 @@ void parse_and_delete(char *dir_path, int nr_rulari)
             perror("eroare deschidere snaphot1 ");
             exit(-1);
         }
-        if ((prev_snapfd = open("prev_snap.bin", O_RDWR)) < 0)
+        if ((prev_snapfd = open(prev_snap, O_RDWR)) < 0)
         {
             perror("eroare deschidere snapshot1 ");
             exit(-1);
@@ -414,102 +416,80 @@ int run_count()
 }
 int main(int argc, char **argv)
 {
-    if (argc < 2)
+    if (argc < 4 || argc > 13)
     {
         printf("eroare de argumente");
         exit(-1);
     }
-    DIR *dir;
-    if ((dir = opendir(argv[1])) == NULL)
+    for (int i = 3; i < argc; i++)
     {
-        perror("eroare la director ");
-        exit(-1);
-    }
-    int snapfd;
-    char *snap = "snapshot.txt";
+        DIR *dir;
+        if ((dir = opendir(argv[i])) == NULL)
+        {
+            perror("eroare la director ");
+            exit(-1);
+        }
+        int snapfd;
+        char snap[100];
+        sprintf(snap, "%s/%s_snapshot.txt",argv[2],argv[i]);
 
-    if ((snapfd = open(snap, O_CREAT | O_TRUNC | O_WRONLY, S_IRUSR | S_IWUSR | S_IXUSR)) < 0)
-    {
-        perror("eroare la deschidere snapshot ");
-        exit(-1);
-    }
-    char aux[400];
-    sprintf(aux, "Numele directorului este %s\n", argv[1]);
-    if ((write(snapfd, aux, strlen(aux))) < 0)
-    {
-        perror(NULL);
-        exit(-1);
+        if ((snapfd = open(snap, O_CREAT | O_TRUNC | O_WRONLY, S_IRUSR | S_IWUSR | S_IXUSR)) < 0)
+        {
+            perror("eroare la deschidere snapshot ");
+            exit(-1);
+        }
+        char aux[400];
+        sprintf(aux, "Numele directorului este %s\n", argv[i]);
+        if ((write(snapfd, aux, strlen(aux))) < 0)
+        {
+            perror(NULL);
+            exit(-1);
+        }
+
+        struct stat metadata;
+        if (stat(argv[i], &metadata) < 0)
+        {
+            perror(NULL);
+            exit(-1);
+        }
+        sprintf(aux, "In_nod-ul este %ld\n", metadata.st_ino);
+
+        if ((write(snapfd, aux, strlen(aux))) < 0)
+        {
+            perror(NULL);
+            exit(-1);
+        }
+
+        sprintf(aux, "Dimensiunea este %ld\n", metadata.st_size);
+        if ((write(snapfd, aux, strlen(aux))) < 0)
+        {
+            perror(NULL);
+            exit(-1);
+        }
+        char time[50];
+        strftime(time, 50, "%Y-%m-%d %H:%M:%S", localtime(&metadata.st_mtime));
+
+        sprintf(aux, "Data ultimei modifcari din interior este %s\n\n", time);
+        if ((write(snapfd, aux, strlen(aux))) < 0)
+        {
+            perror(NULL);
+            exit(-1);
+        }
+        if (close(snapfd) < 0)
+        {
+            perror(NULL);
+            exit(-1);
+        }
+        if (closedir(dir))
+        {
+            perror(NULL);
+            exit(-1);
+        }
+
+        int a = run_count();
+        printf("a %d\n", a);
+        parse_and_delete(argv[i], a,argv[2]);
     }
 
-    struct stat metadata;
-    if (stat(argv[1], &metadata) < 0)
-    {
-        perror(NULL);
-        exit(-1);
-    }
-    sprintf(aux, "In_nod-ul este %ld\n", metadata.st_ino);
-
-    if ((write(snapfd, aux, strlen(aux))) < 0)
-    {
-        perror(NULL);
-        exit(-1);
-    }
-
-    sprintf(aux, "Dimensiunea este %ld\n", metadata.st_size);
-    if ((write(snapfd, aux, strlen(aux))) < 0)
-    {
-        perror(NULL);
-        exit(-1);
-    }
-    char time[50];
-    strftime(time, 50, "%Y-%m-%d %H:%M:%S", localtime(&metadata.st_mtime));
-
-    sprintf(aux, "Data ultimei modifcari din interior este %s\n\n", time);
-    if ((write(snapfd, aux, strlen(aux))) < 0)
-    {
-        perror(NULL);
-        exit(-1);
-    }
-    if (close(snapfd) < 0)
-    {
-        perror(NULL);
-        exit(-1);
-    }
-    if (closedir(dir))
-    {
-        perror(NULL);
-        exit(-1);
-    }
-
-    int a = run_count();
-    printf("a %d\n", a);
-    parse_and_delete(argv[1],a);
-    // File_Info *v = NULL;
-    // int size_v;
-    // int prev_snapfd;
-    // if ((prev_snapfd = open("prev_snap.bin", O_RDWR)) < 0)
-    // {
-    //     perror("eroare deschidere snapshot1 ");
-    //     exit(-1);
-    // }
-    // read(prev_snapfd, &size_v, sizeof(int));
-    // // printf("sivev=%d\n",size_v);
-    // if ((v = malloc(size_v * sizeof(File_Info))) == NULL)
-    // {
-    //     printf("eroare malloc");
-    //     exit(-1);
-    // }
-    // read(prev_snapfd, v, size_v * sizeof(File_Info));
-    // printf("size_v este %d\n", size_v);
-    // for (int i = 0; i < size_v; i++)
-    // {
-    //     printf("%d    path=%s, size=%ld, last_modif= %s, innode= %ld, tip=%s\n\n",
-    //            i, v[size_v - 1].path, v[size_v - 1].size, v[size_v - 1].last_modify, v[size_v - 1].innode, v[size_v - 1].tip);
-    // }
-    // if (close(prev_snapfd) < 0)
-    // {
-    //     perror(NULL);
-    //     exit(-1);
-    // }
     return 0;
 }
