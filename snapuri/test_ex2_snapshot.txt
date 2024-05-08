@@ -21,5 +21,3 @@ In_nod-ul este 20266198323280380
 Dimensiunea este 0
 Data ultimei modifcari din interior este 2024-05-08 18:22:31
 
-Fata de rularea anterioara s-a sters fisierul cu denumirea test_ex2/a si innode-ul 3377699720637347
-

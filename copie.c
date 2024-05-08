@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <dirent.h>
 #include <time.h>
+#include <sys/wait.h>
 typedef struct
 {
     char path[400];
@@ -22,7 +23,7 @@ void stergere_prev(File_Info *v, int *size_v, int poz)
         v[i] = v[i + 1];
     *size_v = *size_v - 1;
 }
-void parse_director(char *dir_path, int nr_rulari, char *snap,char *prev_snap)
+void parse_director(char *dir_path, int nr_rulari, char *snap, char *prev_snap)
 {
     DIR *dir;
     if ((dir = opendir(dir_path)) == NULL)
@@ -70,7 +71,7 @@ void parse_director(char *dir_path, int nr_rulari, char *snap,char *prev_snap)
                     perror("eroare deschidere snaphot1 ");
                     exit(-1);
                 }
-                //printf("sas\n");
+                // printf("sas\n");
                 size_v = 0;
                 v = NULL;
                 if (close(prev_snapfd) < 0)
@@ -204,7 +205,7 @@ void parse_director(char *dir_path, int nr_rulari, char *snap,char *prev_snap)
                 }
                 else
                     sprintf(aux, "Numele este %s, iar tipul sau este %s\nCaracteristicile sunt: \n", path, v[j].tip);
-                    
+
                 if (v[j].size != metadata.st_size)
                 {
                     sprintf(aux3, "Dimensiunea s-a modificat din %ld in %ld\n", v[j].size, metadata.st_size);
@@ -276,7 +277,7 @@ void parse_director(char *dir_path, int nr_rulari, char *snap,char *prev_snap)
             exit(-1);
         }
         if (S_ISDIR(type))
-            parse_director(path, nr_rulari, snap,prev_snap);
+            parse_director(path, nr_rulari, snap, prev_snap);
     }
 
     if (closedir(dir))
@@ -285,13 +286,13 @@ void parse_director(char *dir_path, int nr_rulari, char *snap,char *prev_snap)
         exit(-1);
     }
 }
-void parse_and_delete(char *dir_path, int nr_rulari,char *director)
+void parse_and_delete(char *dir_path, int nr_rulari, char *director)
 {
     size_array = 0;
-    char snap[100],prev_snap[100];
-    sprintf(snap, "%s/%s_snapshot.txt", director,dir_path);
-    sprintf(prev_snap,"%s/%s_prev_snap.bin",director,dir_path);
-    parse_director(dir_path, nr_rulari, snap,prev_snap);
+    char snap[100], prev_snap[100];
+    sprintf(snap, "%s/%s_snapshot.txt", director, dir_path);
+    sprintf(prev_snap, "%s/%s_prev_snap.bin", director, dir_path);
+    parse_director(dir_path, nr_rulari, snap, prev_snap);
     File_Info *v = NULL;
     int size_v = 0, snapfd, prev_snapfd;
     // char *snap="snapshot.txt";
@@ -417,72 +418,98 @@ int main(int argc, char **argv)
         exit(-1);
     }
     int a = run_count();
-    //printf("a %d\n", a);
+    int pid;
+    int nr_procese = 0;
+    // printf("a %d\n", a);
+    
     for (int i = 3; i < argc; i++)
     {
-        DIR *dir;
-        if ((dir = opendir(argv[i])) == NULL)
+        struct stat st;
+        if(stat(argv[i],&st)==0 && S_ISDIR(st.st_mode)==0)
         {
-            perror("eroare la director ");
+            printf("Fisierul %s nu este direcotr\n",argv[i]);
+            continue;
+        }
+        printf("Procesul de creare a snapshot-ului pentru directorul %s a fost realizat cu succes\n", argv[i]);
+        nr_procese = nr_procese + 1;
+        if ((pid = fork()) < 0)
+        {
+            perror("Eroare creare proces");
             exit(-1);
         }
-        int snapfd;
-        char snap[100];
-        sprintf(snap, "%s/%s_snapshot.txt",argv[2],argv[i]);
+        if (pid == 0)
+        {
+            DIR *dir;
+            if ((dir = opendir(argv[i])) == NULL)
+            {
+                perror("eroare la director ");
+                exit(-1);
+            }
+            int snapfd;
+            char snap[100];
+            sprintf(snap, "%s/%s_snapshot.txt", argv[2], argv[i]);
 
-        if ((snapfd = open(snap, O_CREAT | O_TRUNC | O_WRONLY, S_IRUSR | S_IWUSR | S_IXUSR)) < 0)
-        {
-            perror("eroare la deschidere snapshot ");
-            exit(-1);
-        }
-        char aux[400];
-        sprintf(aux, "Numele directorului este %s\n", argv[i]);
-        if ((write(snapfd, aux, strlen(aux))) < 0)
-        {
-            perror(NULL);
-            exit(-1);
-        }
+            if ((snapfd = open(snap, O_CREAT | O_TRUNC | O_WRONLY, S_IRUSR | S_IWUSR | S_IXUSR)) < 0)
+            {
+                perror("eroare la deschidere snapshot ");
+                exit(-1);
+            }
+            char aux[400];
+            sprintf(aux, "Numele directorului este %s\n", argv[i]);
+            if ((write(snapfd, aux, strlen(aux))) < 0)
+            {
+                perror(NULL);
+                exit(-1);
+            }
 
-        struct stat metadata;
-        if (stat(argv[i], &metadata) < 0)
-        {
-            perror(NULL);
-            exit(-1);
-        }
-        sprintf(aux, "In_nod-ul este %ld\n", metadata.st_ino);
+            struct stat metadata;
+            if (stat(argv[i], &metadata) < 0)
+            {
+                perror(NULL);
+                exit(-1);
+            }
+            sprintf(aux, "In_nod-ul este %ld\n", metadata.st_ino);
 
-        if ((write(snapfd, aux, strlen(aux))) < 0)
-        {
-            perror(NULL);
-            exit(-1);
-        }
+            if ((write(snapfd, aux, strlen(aux))) < 0)
+            {
+                perror(NULL);
+                exit(-1);
+            }
 
-        sprintf(aux, "Dimensiunea este %ld\n", metadata.st_size);
-        if ((write(snapfd, aux, strlen(aux))) < 0)
-        {
-            perror(NULL);
-            exit(-1);
-        }
-        char time[50];
-        strftime(time, 50, "%Y-%m-%d %H:%M:%S", localtime(&metadata.st_mtime));
+            sprintf(aux, "Dimensiunea este %ld\n", metadata.st_size);
+            if ((write(snapfd, aux, strlen(aux))) < 0)
+            {
+                perror(NULL);
+                exit(-1);
+            }
+            char time[50];
+            strftime(time, 50, "%Y-%m-%d %H:%M:%S", localtime(&metadata.st_mtime));
 
-        sprintf(aux, "Data ultimei modifcari din interior este %s\n\n", time);
-        if ((write(snapfd, aux, strlen(aux))) < 0)
-        {
-            perror(NULL);
-            exit(-1);
+            sprintf(aux, "Data ultimei modifcari din interior este %s\n\n", time);
+            if ((write(snapfd, aux, strlen(aux))) < 0)
+            {
+                perror(NULL);
+                exit(-1);
+            }
+            if (close(snapfd) < 0)
+            {
+                perror(NULL);
+                exit(-1);
+            }
+            if (closedir(dir))
+            {
+                perror(NULL);
+                exit(-1);
+            }
+            parse_and_delete(argv[i], a, argv[2]);
+            exit(0);
         }
-        if (close(snapfd) < 0)
-        {
-            perror(NULL);
-            exit(-1);
-        }
-        if (closedir(dir))
-        {
-            perror(NULL);
-            exit(-1);
-        }
-        parse_and_delete(argv[i], a,argv[2]);
+    }
+    int status;
+    for (int i = 0; i < nr_procese; i++)
+    {
+        int wait_pid = wait(&status);
+        printf("Procesul copil cu PID ul %d s a incheiat cu codul %d\n", wait_pid, WEXITSTATUS(status));
     }
     return 0;
 }
