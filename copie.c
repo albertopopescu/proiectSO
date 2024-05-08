@@ -505,11 +505,12 @@ int main(int argc, char **argv)
             exit(0);
         }
     }
+
     int status;
-    for (int i = 0; i < nr_procese; i++)
+    for(int i=1;i<=nr_procese;i++)
     {
-        int wait_pid = wait(&status);
-        printf("Procesul copil cu PID ul %d s a incheiat cu codul %d\n", wait_pid, WEXITSTATUS(status));
+        int wait_pid=wait(&status);
+        printf("Procesul copil cu PID ul %d s a incheiat cu codul %d\n",wait_pid,WEXITSTATUS(status));
     }
     return 0;
 }
