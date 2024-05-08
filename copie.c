@@ -55,7 +55,7 @@ void parse_director(char *dir_path, int nr_rulari, char *snap,char *prev_snap)
         }
         char time[50];
         strftime(time, 50, "%Y-%m-%d %H:%M:%S", localtime(&metadata.st_mtime));
-        char aux[350], aux2[350], aux3[350], aux4[350];
+        char aux[1024], aux2[1024], aux3[1024], aux4[1024];
         mode_t type = metadata.st_mode;
         strcpy(array_innode[size_array].path, path);
         array_innode[size_array++].innode = metadata.st_ino; // celelalte campuri nu ne intereseaza, pt ca fol acest vector doar pentru stergere
@@ -204,7 +204,7 @@ void parse_director(char *dir_path, int nr_rulari, char *snap,char *prev_snap)
                 }
                 else
                     sprintf(aux, "Numele este %s, iar tipul sau este %s\nCaracteristicile sunt: \n", path, v[j].tip);
-
+                    
                 if (v[j].size != metadata.st_size)
                 {
                     sprintf(aux3, "Dimensiunea s-a modificat din %ld in %ld\n", v[j].size, metadata.st_size);
