@@ -75,5 +75,3 @@ In_nod-ul este 9007199254847460
 Dimensiunea este 0
 Data ultimei modifcari din interior este 2024-05-08 18:18:50
 
-Fata de rularea anterioara s-a sters fisierul cu denumirea test_ex1/asa si innode-ul 8444249301491966
-

@@ -70,7 +70,7 @@ void parse_director(char *dir_path, int nr_rulari, char *snap,char *prev_snap)
                     perror("eroare deschidere snaphot1 ");
                     exit(-1);
                 }
-                printf("sas\n");
+                //printf("sas\n");
                 size_v = 0;
                 v = NULL;
                 if (close(prev_snapfd) < 0)
@@ -367,10 +367,8 @@ int run_count()
 {
     int fd;
     int count;
-
     // Încercăm să deschidem fișierul pentru citire și scriere
     fd = open("run_count.bin", O_RDWR);
-
     if (fd == -1)
     {
         // Dacă fișierul nu există, îl cream și începem numărătoarea de la 1
@@ -391,21 +389,18 @@ int run_count()
         }
         count++;
     }
-
     // Ne întoarcem la începutul fișierului pentru a scrie noua valoare
     if (lseek(fd, 0, SEEK_SET) == -1)
     {
         perror("eroare seeking");
         exit(-1);
     }
-
     // Convertim numărul de rulări înapoi în șir de caractere și îl scriem înapoi în fișier
     if (write(fd, &count, sizeof(int)) == -1)
     {
         perror("Error writing to file");
         exit(-1);
     }
-
     // Închidem fișierul
     if (close(fd) < 0)
     {
@@ -421,6 +416,8 @@ int main(int argc, char **argv)
         printf("eroare de argumente");
         exit(-1);
     }
+    int a = run_count();
+    //printf("a %d\n", a);
     for (int i = 3; i < argc; i++)
     {
         DIR *dir;
@@ -485,11 +482,7 @@ int main(int argc, char **argv)
             perror(NULL);
             exit(-1);
         }
-
-        int a = run_count();
-        printf("a %d\n", a);
         parse_and_delete(argv[i], a,argv[2]);
     }
-
     return 0;
 }
