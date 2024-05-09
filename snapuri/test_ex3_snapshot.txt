@@ -1,29 +1,29 @@
 Numele directorului este test_ex3
-In_nod-ul este 1291195
+In_nod-ul este 1291200
 Dimensiunea este 4096
-Data ultimei modifcari din interior este 2024-05-09 20:32:48
+Data ultimei modifcari din interior este 2024-05-09 23:40:20
 
 Numele este test_ex3/saddasdas, iar tipul sau este file
 Caracteristicile sunt: 
-In_nod-ul este 1291238
+In_nod-ul este 1291272
 Dimensiunea este 0
-Data ultimei modifcari din interior este 2024-05-09 20:23:58
+Data ultimei modifcari din interior este 2024-05-09 20:38:15
 
 Numele este test_ex3/a, iar tipul sau este director
 Caracteristicile sunt: 
-In_nod-ul este 1291196
+In_nod-ul este 1291224
 Dimensiunea este 4096
-Data ultimei modifcari din interior este 2024-05-09 20:02:43
+Data ultimei modifcari din interior este 2024-05-09 23:38:07
+
+Numele este test_ex3/a/b, iar tipul sau este file
+Caracteristicile sunt: 
+In_nod-ul este 1291277
+Dimensiunea este 0
+Data ultimei modifcari din interior este 2024-05-09 23:38:07
 
 Numele este test_ex3/a/as, iar tipul sau este file
 Caracteristicile sunt: 
-In_nod-ul este 1291197
+In_nod-ul este 1291238
 Dimensiunea este 0
-Data ultimei modifcari din interior este 2024-05-09 20:02:43
-
-Acest fisier este unul nou si este un file, iar numele sau este test_ex3/asas
-Caracteristicile sunt: 
-In_nod-ul este 1291227
-Dimensiunea este 6678
-Data ultimei modifcari este 2024-05-09 20:27:39
+Data ultimei modifcari din interior este 2024-05-09 20:38:15
 
