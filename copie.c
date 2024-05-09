@@ -72,6 +72,9 @@ void parse_director(char *dir_path, int nr_rulari, char *snap, char *prev_snap, 
                     perror("Error forking process");
                     exit(EXIT_FAILURE);
                 }
+                int status;
+                int wait_pid = wait(&status);
+                //printf("Procesul copil cu PID ul %d al copilului s a incheiat cu codul %d\n", wait_pid, WEXITSTATUS(status));
             }
         }
         char time[50];
@@ -526,7 +529,7 @@ int main(int argc, char **argv)
                 perror(NULL);
                 exit(-1);
             }
-            parse_and_delete(argv[i], a, argv[2],argv[4]);
+            parse_and_delete(argv[i], a, argv[2], argv[4]);
             exit(0);
         }
     }
