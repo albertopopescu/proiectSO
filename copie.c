@@ -23,7 +23,7 @@ void stergere_prev(File_Info *v, int *size_v, int poz)
         v[i] = v[i + 1];
     *size_v = *size_v - 1;
 }
-void parse_director(char *dir_path, int nr_rulari, char *snap, char *prev_snap)
+void parse_director(char *dir_path, int nr_rulari, char *snap, char *prev_snap, char *numeSAFE)
 {
     DIR *dir;
     if ((dir = opendir(dir_path)) == NULL)
@@ -42,11 +42,6 @@ void parse_director(char *dir_path, int nr_rulari, char *snap, char *prev_snap)
         if (strcmp(file->d_name, ".") == 0 || strcmp(file->d_name, "..") == 0)
             continue;
         sprintf(path, "%s/%s", dir_path, file->d_name);
-        if ((snapfd = open(snap, O_WRONLY | O_APPEND)) < 0)
-        {
-            perror("eroare deschidere snaphot1 ");
-            exit(-1);
-        }
 
         struct stat metadata;
         if (stat(path, &metadata) < 0)
@@ -54,12 +49,42 @@ void parse_director(char *dir_path, int nr_rulari, char *snap, char *prev_snap)
             perror(NULL);
             exit(-1);
         }
+        if (!S_ISDIR(metadata.st_mode))
+        {
+            // printf("3");
+            if (!(metadata.st_mode & S_IRUSR) && !(metadata.st_mode & S_IWUSR) && !(metadata.st_mode & S_IXUSR) &&
+                !(metadata.st_mode & S_IRGRP) && !(metadata.st_mode & S_IWGRP) && !(metadata.st_mode & S_IXGRP) &&
+                !(metadata.st_mode & S_IROTH) && !(metadata.st_mode & S_IWOTH) && !(metadata.st_mode & S_IXOTH))
+            {
+                // printf("4");
+                pid_t pid = fork();
+                if (pid == 0)
+                {
+                    char destPath[512];
+                    snprintf(destPath, sizeof(destPath), "%s", numeSAFE);
+
+                    execl("/bin/bash", "sh", "mall.sh", path, destPath, (char *)NULL); // mută fișierul
+                    perror("Error executing sh");                                      // eroare dacă execl eșuează
+                    exit(EXIT_FAILURE);                                                // oprește procesul copil în caz de eroare
+                }
+                else if (pid < 0)
+                {
+                    perror("Error forking process");
+                    exit(EXIT_FAILURE);
+                }
+            }
+        }
         char time[50];
         strftime(time, 50, "%Y-%m-%d %H:%M:%S", localtime(&metadata.st_mtime));
         char aux[1024], aux2[1024], aux3[1024], aux4[1024];
         mode_t type = metadata.st_mode;
         strcpy(array_innode[size_array].path, path);
         array_innode[size_array++].innode = metadata.st_ino; // celelalte campuri nu ne intereseaza, pt ca fol acest vector doar pentru stergere
+        if ((snapfd = open(snap, O_WRONLY | O_APPEND)) < 0)
+        {
+            perror("eroare deschidere snaphot1 ");
+            exit(-1);
+        }
 
         if (nr_rulari == 1)
         {
@@ -277,7 +302,7 @@ void parse_director(char *dir_path, int nr_rulari, char *snap, char *prev_snap)
             exit(-1);
         }
         if (S_ISDIR(type))
-            parse_director(path, nr_rulari, snap, prev_snap);
+            parse_director(path, nr_rulari, snap, prev_snap, numeSAFE);
     }
 
     if (closedir(dir))
@@ -286,13 +311,13 @@ void parse_director(char *dir_path, int nr_rulari, char *snap, char *prev_snap)
         exit(-1);
     }
 }
-void parse_and_delete(char *dir_path, int nr_rulari, char *director)
+void parse_and_delete(char *dir_path, int nr_rulari, char *director, char *numeSAFE)
 {
     size_array = 0;
     char snap[100], prev_snap[100];
     sprintf(snap, "%s/%s_snapshot.txt", director, dir_path);
     sprintf(prev_snap, "%s/%s_prev_snap.bin", director, dir_path);
-    parse_director(dir_path, nr_rulari, snap, prev_snap);
+    parse_director(dir_path, nr_rulari, snap, prev_snap, numeSAFE);
     File_Info *v = NULL;
     int size_v = 0, snapfd, prev_snapfd;
     // char *snap="snapshot.txt";
@@ -412,7 +437,7 @@ int run_count()
 }
 int main(int argc, char **argv)
 {
-    if (argc < 4 || argc > 13)
+    if (argc < 6 || argc > 15)
     {
         printf("eroare de argumente");
         exit(-1);
@@ -421,13 +446,13 @@ int main(int argc, char **argv)
     int pid;
     int nr_procese = 0;
     // printf("a %d\n", a);
-    
-    for (int i = 3; i < argc; i++)
+
+    for (int i = 5; i < argc; i++)
     {
         struct stat st;
-        if(stat(argv[i],&st)==0 && S_ISDIR(st.st_mode)==0)
+        if (stat(argv[i], &st) == 0 && S_ISDIR(st.st_mode) == 0)
         {
-            printf("Fisierul %s nu este direcotr\n",argv[i]);
+            printf("Fisierul %s nu este direcotr\n", argv[i]);
             continue;
         }
         printf("Procesul de creare a snapshot-ului pentru directorul %s a fost realizat cu succes\n", argv[i]);
@@ -501,15 +526,15 @@ int main(int argc, char **argv)
                 perror(NULL);
                 exit(-1);
             }
-            parse_and_delete(argv[i], a, argv[2]);
+            parse_and_delete(argv[i], a, argv[2],argv[4]);
             exit(0);
         }
     }
     int status;
-    for(int i=1;i<=nr_procese;i++)
+    for (int i = 1; i <= nr_procese; i++)
     {
-        int wait_pid=wait(&status);
-        printf("Procesul copil cu PID ul %d s a incheiat cu codul %d\n",wait_pid,WEXITSTATUS(status));
+        int wait_pid = wait(&status);
+        printf("Procesul copil cu PID ul %d s a incheiat cu codul %d\n", wait_pid, WEXITSTATUS(status));
     }
     return 0;
 }
