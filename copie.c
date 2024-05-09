@@ -505,7 +505,6 @@ int main(int argc, char **argv)
             exit(0);
         }
     }
-
     int status;
     for(int i=1;i<=nr_procese;i++)
     {
