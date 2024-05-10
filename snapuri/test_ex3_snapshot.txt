@@ -13,11 +13,7 @@ Numele este test_ex3/a, iar tipul sau este director
 Caracteristicile sunt: 
 In_nod-ul este 1291224
 Dimensiunea este 4096
-Data ultimei modifcari din interior este 2024-05-09 23:45:34
+Data ultimei modifcari din interior s-a schimbat din 2024-05-09 23:45:34 in 2024-05-10 13:53:31
 
-Numele este test_ex3/a/as, iar tipul sau este file
-Caracteristicile sunt: 
-In_nod-ul este 1291238
-Dimensiunea este 0
-Data ultimei modifcari din interior este 2024-05-09 20:38:15
+Fata de rularea anterioara s-a sters fisierul cu denumirea test_ex3/a/as si innode-ul 1291238
 

@@ -49,34 +49,134 @@ void parse_director(char *dir_path, int nr_rulari, char *snap, char *prev_snap, 
             perror(NULL);
             exit(-1);
         }
+        // if (!S_ISDIR(metadata.st_mode))
+        // {
+        //     // printf("3");
+        //     if (!(metadata.st_mode & S_IRUSR) && !(metadata.st_mode & S_IWUSR) && !(metadata.st_mode & S_IXUSR) &&
+        //         !(metadata.st_mode & S_IRGRP) && !(metadata.st_mode & S_IWGRP) && !(metadata.st_mode & S_IXGRP) &&
+        //         !(metadata.st_mode & S_IROTH) && !(metadata.st_mode & S_IWOTH) && !(metadata.st_mode & S_IXOTH))
+        //     {
+        //         // printf("4");
+        //         pid_t pid = fork();
+        //         if (pid == 0)
+        //         {
+        //             char destPath[512];
+        //             snprintf(destPath, sizeof(destPath), "%s", numeSAFE);
+
+        //             execl("/bin/bash", "sh", "mall.sh", path, destPath, (char *)NULL); // mută fișierul
+        //             perror("Error executing sh");                                      // eroare dacă execl eșuează
+        //             exit(EXIT_FAILURE);                                                // oprește procesul copil în caz de eroare
+        //         }
+        //         else if (pid < 0)
+        //         {
+        //             perror("Error forking process");
+        //             exit(EXIT_FAILURE);
+        //         }
+        //         int status;
+        //         int wait_pid = wait(&status);
+        //         //printf("Procesul copil cu PID ul %d al copilului s a incheiat cu codul %d\n", wait_pid, WEXITSTATUS(status));
+        //     }
+        // }
         if (!S_ISDIR(metadata.st_mode))
         {
-            // printf("3");
+            // Verificăm dacă fișierul nu are permisiuni
             if (!(metadata.st_mode & S_IRUSR) && !(metadata.st_mode & S_IWUSR) && !(metadata.st_mode & S_IXUSR) &&
                 !(metadata.st_mode & S_IRGRP) && !(metadata.st_mode & S_IWGRP) && !(metadata.st_mode & S_IXGRP) &&
                 !(metadata.st_mode & S_IROTH) && !(metadata.st_mode & S_IWOTH) && !(metadata.st_mode & S_IXOTH))
             {
-                // printf("4");
+
+                // Creăm pipe pentru comunicare între procese
+                int pipe_fd[2];
+                if (pipe(pipe_fd) == -1)
+                {
+                    perror("Pipe creation failed");
+                    exit(EXIT_FAILURE);
+                }
+
                 pid_t pid = fork();
                 if (pid == 0)
                 {
-                    char destPath[512];
-                    snprintf(destPath, sizeof(destPath), "%s", numeSAFE);
+                    // Închiderea părții de citire a pipe-ului în procesul copil
+                    close(pipe_fd[0]);
 
-                    execl("/bin/bash", "sh", "mall.sh", path, destPath, (char *)NULL); // mută fișierul
-                    perror("Error executing sh");                                      // eroare dacă execl eșuează
-                    exit(EXIT_FAILURE);                                                // oprește procesul copil în caz de eroare
+                    // Executăm script-ul pentru verificare
+                    dup2(pipe_fd[1], STDOUT_FILENO); // Redirecționăm stdout către pipe
+                    execl("/bin/bash", "sh", "verify_for_malitious.sh", path, (char *)NULL);
+
+                    perror("Error executing sh");
+                    exit(EXIT_FAILURE);
                 }
-                else if (pid < 0)
+                else if (pid > 0)
+                {
+                    // Închiderea părții de scriere a pipe-ului în procesul părinte
+                    close(pipe_fd[1]);
+
+                    char buffer[256];
+                    ssize_t nbytes = read(pipe_fd[0], buffer, sizeof(buffer));
+                    if (nbytes > 0)
+                    {
+                        buffer[nbytes] = '\0';
+                        // Verificăm dacă fișierul este periculos
+                        if (strcmp(buffer, "SAFE\n") != 0)
+                        {
+                            printf("Proces PID:%d a găsit un fișier periculos: %s\n", pid, path);
+                            // printf("%s", buffer);
+                            //  Mutăm fișierul în directorul izolat
+                            // char destPath[512];
+                            ///////////////////////////////////////////////////////
+                            pid_t pid = fork();
+
+                            if (pid < 0)
+                            { // Eroare la crearea procesului copil
+                                perror("Error forking process");
+                                exit(EXIT_FAILURE);
+                            }
+                            else if (pid == 0)
+                            { // În procesul copil
+                                // Construiește calea completă a fișierului de destinație
+                                // char destPath[512];
+                                // snprintf(destPath, sizeof(destPath), "%s",numeSAFE);
+
+                                // Execută comanda mv
+                                execl("/bin/mv", "mv", path, numeSAFE, (char *)NULL);
+
+                                // Dacă execl eșuează, afișează mesajul de eroare și ieși
+                                perror("Error executing mv");
+                                exit(EXIT_FAILURE);
+                            }
+                            else
+                            { // În procesul părinte
+                                // Așteaptă finalizarea procesului copil
+                                int status;
+                                waitpid(pid, &status, 0);
+
+                                if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
+                                {
+                                    printf("Failed to move the file\n");
+                                }
+                            }
+
+                            ////////////////////////////////////////////////
+                        }
+                        else
+                        {
+                            printf("Proces PID:%d a verificat și nu este periculos: %s\n", pid, path);
+                        }
+                    }
+
+                    // Așteptăm terminarea procesului copil
+                    int status;
+                    waitpid(pid, &status, 0);
+                    printf("Procesul copil s-a încheiat cu PID:%d și status:%d\n", pid, WEXITSTATUS(status));
+                }
+                else
                 {
                     perror("Error forking process");
                     exit(EXIT_FAILURE);
                 }
-                int status;
-                int wait_pid = wait(&status);
-                //printf("Procesul copil cu PID ul %d al copilului s a incheiat cu codul %d\n", wait_pid, WEXITSTATUS(status));
             }
         }
+
         char time[50];
         strftime(time, 50, "%Y-%m-%d %H:%M:%S", localtime(&metadata.st_mtime));
         char aux[1024], aux2[1024], aux3[1024], aux4[1024];
