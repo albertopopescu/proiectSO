@@ -1,77 +1,71 @@
 Numele directorului este test_ex1
-In_nod-ul este 1407374883648469
+In_nod-ul este 1291181
 Dimensiunea este 4096
-Data ultimei modifcari din interior este 2024-05-08 18:19:08
-
-Numele este test_ex1/1, iar tipul sau este file
-Caracteristicile sunt: 
-In_nod-ul este 1407374883648479
-Dimensiunea este 17
-Data ultimei modifcari din interior este 2024-05-08 10:09:08
+Data ultimei modifcari din interior este 2024-05-10 19:50:21
 
 Numele este test_ex1/2, iar tipul sau este file
 Caracteristicile sunt: 
-In_nod-ul este 1407374883648493
-Dimensiunea este 29
-Data ultimei modifcari din interior este 2024-04-08 15:19:51
+In_nod-ul este 1291183
+Dimensiunea s-a modificat din 29 in 20146
+Data ultimei modifcari din interior s-a schimbat din 2024-05-09 20:38:15 in 2024-05-10 21:14:31
 
 Numele este test_ex1/3, iar tipul sau este director
 Caracteristicile sunt: 
-In_nod-ul este 1407374883648503
+In_nod-ul este 1291184
 Dimensiunea este 4096
-Data ultimei modifcari din interior este 2024-04-04 19:25:01
-
-Numele este test_ex1/3/4, iar tipul sau este file
-Caracteristicile sunt: 
-In_nod-ul este 1407374883648505
-Dimensiunea este 10
-Data ultimei modifcari din interior este 2024-04-04 19:25:01
+Data ultimei modifcari din interior este 2024-05-09 20:38:15
 
 Numele este test_ex1/3/5, iar tipul sau este director
 Caracteristicile sunt: 
-In_nod-ul este 1407374883648509
+In_nod-ul este 1291186
 Dimensiunea este 4096
-Data ultimei modifcari din interior este 2024-04-04 19:25:01
-
-Numele este test_ex1/3/5/6, iar tipul sau este file
-Caracteristicile sunt: 
-In_nod-ul este 1407374883648510
-Dimensiunea este 18
-Data ultimei modifcari din interior este 2024-04-08 15:19:56
+Data ultimei modifcari din interior este 2024-05-09 20:38:15
 
 Numele este test_ex1/3/5/7, iar tipul sau este file
 Caracteristicile sunt: 
-In_nod-ul este 1407374883648512
+In_nod-ul este 1291188
 Dimensiunea este 26
-Data ultimei modifcari din interior este 2024-04-04 19:25:01
+Data ultimei modifcari din interior este 2024-05-09 20:38:15
+
+Numele este test_ex1/3/5/6, iar tipul sau este file
+Caracteristicile sunt: 
+In_nod-ul este 1291187
+Dimensiunea este 18
+Data ultimei modifcari din interior este 2024-05-09 20:38:15
 
 Numele este test_ex1/3/5/8, iar tipul sau este director
 Caracteristicile sunt: 
-In_nod-ul este 1407374883648519
+In_nod-ul este 1291189
 Dimensiunea este 4096
-Data ultimei modifcari din interior este 2024-04-22 16:30:04
+Data ultimei modifcari din interior este 2024-05-09 20:38:15
 
 Numele este test_ex1/3/5/8/10, iar tipul sau este file
 Caracteristicile sunt: 
-In_nod-ul este 8162774324808332
+In_nod-ul este 1291190
 Dimensiunea este 28
-Data ultimei modifcari din interior este 2024-05-07 23:19:03
+Data ultimei modifcari din interior este 2024-05-09 20:38:15
 
 Numele este test_ex1/3/5/8/9, iar tipul sau este file
 Caracteristicile sunt: 
-In_nod-ul este 10414574138389513
+In_nod-ul este 1291191
 Dimensiunea este 13
-Data ultimei modifcari din interior este 2024-04-04 19:25:02
+Data ultimei modifcari din interior este 2024-05-09 20:38:15
+
+Numele este test_ex1/3/4, iar tipul sau este file
+Caracteristicile sunt: 
+In_nod-ul este 1291185
+Dimensiunea este 10
+Data ultimei modifcari din interior este 2024-05-09 20:38:15
 
 Numele este test_ex1/AABCD, iar tipul sau este file
 Caracteristicile sunt: 
-In_nod-ul este 5910974510991723
+In_nod-ul este 1291192
 Dimensiunea este 21
-Data ultimei modifcari din interior este 2024-05-08 18:18:37
+Data ultimei modifcari din interior este 2024-05-09 20:38:15
 
-Numele este test_ex1/sad, iar tipul sau este file
+Numele este test_ex1/1, iar tipul sau este file
 Caracteristicile sunt: 
-In_nod-ul este 9007199254847460
-Dimensiunea este 0
-Data ultimei modifcari din interior este 2024-05-08 18:18:50
+In_nod-ul este 1291182
+Dimensiunea este 17
+Data ultimei modifcari din interior este 2024-05-09 20:38:15
 

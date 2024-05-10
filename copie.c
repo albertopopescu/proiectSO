@@ -23,7 +23,7 @@ void stergere_prev(File_Info *v, int *size_v, int poz)
         v[i] = v[i + 1];
     *size_v = *size_v - 1;
 }
-void parse_director(char *dir_path, int nr_rulari, char *snap, char *prev_snap, char *numeSAFE)
+void parse_director(char *dir_path, int nr_rulari, char *snap, char *prev_snap, char *numeSAFE,int *nr_malitioase)
 {
     DIR *dir;
     if ((dir = opendir(dir_path)) == NULL)
@@ -49,34 +49,7 @@ void parse_director(char *dir_path, int nr_rulari, char *snap, char *prev_snap, 
             perror(NULL);
             exit(-1);
         }
-        // if (!S_ISDIR(metadata.st_mode))
-        // {
-        //     // printf("3");
-        //     if (!(metadata.st_mode & S_IRUSR) && !(metadata.st_mode & S_IWUSR) && !(metadata.st_mode & S_IXUSR) &&
-        //         !(metadata.st_mode & S_IRGRP) && !(metadata.st_mode & S_IWGRP) && !(metadata.st_mode & S_IXGRP) &&
-        //         !(metadata.st_mode & S_IROTH) && !(metadata.st_mode & S_IWOTH) && !(metadata.st_mode & S_IXOTH))
-        //     {
-        //         // printf("4");
-        //         pid_t pid = fork();
-        //         if (pid == 0)
-        //         {
-        //             char destPath[512];
-        //             snprintf(destPath, sizeof(destPath), "%s", numeSAFE);
 
-        //             execl("/bin/bash", "sh", "mall.sh", path, destPath, (char *)NULL); // mută fișierul
-        //             perror("Error executing sh");                                      // eroare dacă execl eșuează
-        //             exit(EXIT_FAILURE);                                                // oprește procesul copil în caz de eroare
-        //         }
-        //         else if (pid < 0)
-        //         {
-        //             perror("Error forking process");
-        //             exit(EXIT_FAILURE);
-        //         }
-        //         int status;
-        //         int wait_pid = wait(&status);
-        //         //printf("Procesul copil cu PID ul %d al copilului s a incheiat cu codul %d\n", wait_pid, WEXITSTATUS(status));
-        //     }
-        // }
         if (!S_ISDIR(metadata.st_mode))
         {
             // Verificăm dacă fișierul nu are permisiuni
@@ -113,13 +86,14 @@ void parse_director(char *dir_path, int nr_rulari, char *snap, char *prev_snap, 
 
                     char buffer[256];
                     ssize_t nbytes = read(pipe_fd[0], buffer, sizeof(buffer));
-                    if (nbytes > 0)
+                    if (nbytes > 0)// in cazul in care nu am niciun bytes
                     {
-                        buffer[nbytes] = '\0';
+                        buffer[nbytes] = '\0';//formam stringul
                         // Verificăm dacă fișierul este periculos
                         if (strcmp(buffer, "SAFE\n") != 0)
                         {
-                            printf("Proces PID:%d a găsit un fișier periculos: %s\n", pid, path);
+                            printf("Procesul cu PID ul %d a găsit un fișier periculos: %s\n", pid, path);
+                            *nr_malitioase=*nr_malitioase+1;
                             // printf("%s", buffer);
                             //  Mutăm fișierul în directorul izolat
                             // char destPath[512];
@@ -160,14 +134,14 @@ void parse_director(char *dir_path, int nr_rulari, char *snap, char *prev_snap, 
                         }
                         else
                         {
-                            printf("Proces PID:%d a verificat și nu este periculos: %s\n", pid, path);
+                            printf("Procesulul cu PID ul %d a verificat și nu este periculos: %s\n", pid, path);
                         }
                     }
 
                     // Așteptăm terminarea procesului copil
                     int status;
                     waitpid(pid, &status, 0);
-                    printf("Procesul copil s-a încheiat cu PID:%d și status:%d\n", pid, WEXITSTATUS(status));
+                    printf("Procesul s-a încheiat cu PID ul %d și cu statusul %d\n", pid, WEXITSTATUS(status));
                 }
                 else
                 {
@@ -405,7 +379,7 @@ void parse_director(char *dir_path, int nr_rulari, char *snap, char *prev_snap, 
             exit(-1);
         }
         if (S_ISDIR(type))
-            parse_director(path, nr_rulari, snap, prev_snap, numeSAFE);
+            parse_director(path, nr_rulari, snap, prev_snap, numeSAFE,nr_malitioase);
     }
 
     if (closedir(dir))
@@ -414,13 +388,13 @@ void parse_director(char *dir_path, int nr_rulari, char *snap, char *prev_snap, 
         exit(-1);
     }
 }
-void parse_and_delete(char *dir_path, int nr_rulari, char *director, char *numeSAFE)
+void parse_and_delete(char *dir_path, int nr_rulari, char *director, char *numeSAFE,int *nr_malitioase)
 {
     size_array = 0;
     char snap[100], prev_snap[100];
     sprintf(snap, "%s/%s_snapshot.txt", director, dir_path);
     sprintf(prev_snap, "%s/%s_prev_snap.bin", director, dir_path);
-    parse_director(dir_path, nr_rulari, snap, prev_snap, numeSAFE);
+    parse_director(dir_path, nr_rulari, snap, prev_snap, numeSAFE,nr_malitioase);
     File_Info *v = NULL;
     int size_v = 0, snapfd, prev_snapfd;
     // char *snap="snapshot.txt";
@@ -549,7 +523,7 @@ int main(int argc, char **argv)
     int pid;
     int nr_procese = 0;
     // printf("a %d\n", a);
-
+    int contor_malitioase;
     for (int i = 5; i < argc; i++)
     {
         struct stat st;
@@ -558,13 +532,14 @@ int main(int argc, char **argv)
             printf("Fisierul %s nu este direcotr\n", argv[i]);
             continue;
         }
-        printf("Procesul de creare a snapshot-ului pentru directorul %s a fost realizat cu succes\n", argv[i]);
+        printf("Snapshot-ului pentru directorul %s a fost realizat cu succes\n", argv[i]);
         nr_procese = nr_procese + 1;
         if ((pid = fork()) < 0)
         {
             perror("Eroare creare proces");
             exit(-1);
         }
+       
         if (pid == 0)
         {
             DIR *dir;
@@ -629,7 +604,10 @@ int main(int argc, char **argv)
                 perror(NULL);
                 exit(-1);
             }
-            parse_and_delete(argv[i], a, argv[2], argv[4]);
+            contor_malitioase=0;
+           
+            parse_and_delete(argv[i], a, argv[2], argv[4],&contor_malitioase);
+            printf("Pentru directorul %s s au gasit %d fisiere malitioase\n",argv[i],contor_malitioase);
             exit(0);
         }
     }
@@ -637,7 +615,8 @@ int main(int argc, char **argv)
     for (int i = 1; i <= nr_procese; i++)
     {
         int wait_pid = wait(&status);
-        printf("Procesul copil cu PID ul %d s a incheiat cu codul %d\n", wait_pid, WEXITSTATUS(status));
+        printf("Procesul copil cu PID ul %d specific directorului %d din linia de comanda s a incheiat cu codul %d\n",
+             wait_pid,i, WEXITSTATUS(status));
     }
     return 0;
 }

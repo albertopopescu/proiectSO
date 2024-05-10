@@ -1,19 +1,23 @@
 Numele directorului este test_ex2
-In_nod-ul este 1291194
+In_nod-ul este 1291433
 Dimensiunea este 4096
-Data ultimei modifcari din interior este 2024-05-10 13:52:15
+Data ultimei modifcari din interior este 2024-05-10 19:50:21
 
-Numele este test_ex2/d, iar tipul sau este director
+Numele este test_ex2/fff, iar tipul sau este director
 Caracteristicile sunt: 
-In_nod-ul este 1291195
+In_nod-ul este 1291437
 Dimensiunea este 4096
-Data ultimei modifcari din interior este 2024-05-09 20:38:15
+Data ultimei modifcari din interior este 2024-05-10 19:28:37
 
-Numele este test_ex2/d/sd, iar tipul sau este file
+Numele este test_ex2/fff/a, iar tipul sau este file
 Caracteristicile sunt: 
-In_nod-ul este 1291196
-Dimensiunea este 0
-Data ultimei modifcari din interior este 2024-05-09 20:38:15
+In_nod-ul este 1291438
+Dimensiunea este 7
+Data ultimei modifcari din interior este 2024-05-10 19:28:52
 
-Fata de rularea anterioara s-a sters fisierul cu denumirea test_ex2/v si innode-ul 1291197
+Numele este test_ex2/vvdd, iar tipul sau este file
+Caracteristicile sunt: 
+In_nod-ul este 1291436
+Dimensiunea s-a modificat din 6 in 20146
+Data ultimei modifcari din interior s-a schimbat din 2024-05-10 19:28:56 in 2024-05-10 21:14:20
 
