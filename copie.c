@@ -11,11 +11,11 @@
 typedef struct
 {
     char path[400];
-    long size, innode;
+    long size, inode;
     char last_modify[400], permission[15];
     char tip[12]; // director,file
 } File_Info;
-File_Info array_innode[1000]; // vector cu innode-urile si numele fisierelor din rularea curenta
+File_Info array_inode[1000]; // vector cu inode-urile si numele fisierelor din rularea curenta
 int size_array = 0;
 int verificare_argumente(int argc, char **argv)
 {
@@ -136,46 +136,46 @@ void parse_director(char *dir_path, int nr_rulari, char *snap, char *prev_snap, 
         }
         mode_t perm = metadata.st_mode;
         if (S_ISDIR(perm))
-            array_innode[size_array].permission[0] = 'd';
+            array_inode[size_array].permission[0] = 'd';
         else
-            array_innode[size_array].permission[0] = '-';
+            array_inode[size_array].permission[0] = '-';
         if (perm & S_IRUSR)
-            array_innode[size_array].permission[1] = 'r';
+            array_inode[size_array].permission[1] = 'r';
         else
-            array_innode[size_array].permission[1] = '-';
+            array_inode[size_array].permission[1] = '-';
         if (perm & S_IWUSR)
-            array_innode[size_array].permission[2] = 'w';
+            array_inode[size_array].permission[2] = 'w';
         else
-            array_innode[size_array].permission[2] = '-';
+            array_inode[size_array].permission[2] = '-';
         if (perm & S_IXUSR)
-            array_innode[size_array].permission[3] = 'x';
+            array_inode[size_array].permission[3] = 'x';
         else
-            array_innode[size_array].permission[3] = '-';
+            array_inode[size_array].permission[3] = '-';
         if (perm & S_IRGRP)
-            array_innode[size_array].permission[4] = 'r';
+            array_inode[size_array].permission[4] = 'r';
         else
-            array_innode[size_array].permission[4] = '-';
+            array_inode[size_array].permission[4] = '-';
         if (perm & S_IWGRP)
-            array_innode[size_array].permission[5] = 'w';
+            array_inode[size_array].permission[5] = 'w';
         else
-            array_innode[size_array].permission[5] = '-';
+            array_inode[size_array].permission[5] = '-';
         if (perm & S_IXGRP)
-            array_innode[size_array].permission[6] = 'x';
+            array_inode[size_array].permission[6] = 'x';
         else
-            array_innode[size_array].permission[6] = '-';
+            array_inode[size_array].permission[6] = '-';
         if (perm & S_IROTH)
-            array_innode[size_array].permission[7] = 'r';
+            array_inode[size_array].permission[7] = 'r';
         else
-            array_innode[size_array].permission[7] = '-';
+            array_inode[size_array].permission[7] = '-';
         if (perm & S_IWOTH)
-            array_innode[size_array].permission[8] = 'w';
+            array_inode[size_array].permission[8] = 'w';
         else
-            array_innode[size_array].permission[8] = '-';
+            array_inode[size_array].permission[8] = '-';
         if (perm & S_IXOTH)
-            array_innode[size_array].permission[9] = 'x';
+            array_inode[size_array].permission[9] = 'x';
         else
-            array_innode[size_array].permission[9] = '-';
-        array_innode[size_array].permission[10] = '\0';
+            array_inode[size_array].permission[9] = '-';
+        array_inode[size_array].permission[10] = '\0';
 
         if (S_ISREG(metadata.st_mode) && S_ISLNK(metadata.st_mode)==0)
         {
@@ -256,8 +256,8 @@ void parse_director(char *dir_path, int nr_rulari, char *snap, char *prev_snap, 
         strftime(time, 50, "%Y-%m-%d %H:%M:%S", localtime(&metadata.st_mtime));
         char aux[1024], aux2[1024], aux3[1024], aux4[1024], aux5[1024];
         mode_t type = metadata.st_mode;
-        strcpy(array_innode[size_array].path, path);
-        array_innode[size_array++].innode = metadata.st_ino; // celelalte campuri nu ne intereseaza, pt ca fol acest vector doar pentru stergere
+        strcpy(array_inode[size_array].path, path);
+        array_inode[size_array++].inode = metadata.st_ino; // celelalte campuri nu ne intereseaza, pt ca fol acest vector doar pentru stergere
         if ((snapfd = open(snap, O_WRONLY | O_APPEND)) < 0)
         {
             perror("eroare deschidere snaphot1 ");
@@ -311,8 +311,8 @@ void parse_director(char *dir_path, int nr_rulari, char *snap, char *prev_snap, 
             strcpy(v[size_v - 1].path, path);
             v[size_v - 1].size = metadata.st_size;
             strcpy(v[size_v - 1].last_modify, time);
-            v[size_v - 1].innode = metadata.st_ino;
-            strcpy(v[size_v - 1].permission, array_innode[size_array - 1].permission);
+            v[size_v - 1].inode = metadata.st_ino;
+            strcpy(v[size_v - 1].permission, array_inode[size_array - 1].permission);
 
             if (S_ISDIR(type))
                 strcpy(v[size_v - 1].tip, "director");
@@ -322,8 +322,8 @@ void parse_director(char *dir_path, int nr_rulari, char *snap, char *prev_snap, 
             // printf("sivev=%d\n", size_v);
             // for (int i = 0; i < size_v; i++)
             // {
-            //     printf("%d    path=%s, size=%ld, last_modif= %s, innode= %ld, tip=%s\n\n",
-            //            i, v[i].path, v[i].size, v[i].last_modify, v[i].innode, v[i].tip);
+            //     printf("%d    path=%s, size=%ld, last_modif= %s, inode= %ld, tip=%s\n\n",
+            //            i, v[i].path, v[i].size, v[i].last_modify, v[i].inode, v[i].tip);
             // }
 
             if ((prev_snapfd = open(prev_snap, O_WRONLY)) < 0)
@@ -345,7 +345,7 @@ void parse_director(char *dir_path, int nr_rulari, char *snap, char *prev_snap, 
             sprintf(aux, "Acest fisier este un %s, iar numele sau este %s\nCaracteristicile sunt: \n", v[size_v - 1].tip, path);
             sprintf(aux2, "In_nod-ul este %ld\n", metadata.st_ino);
             sprintf(aux3, "Dimensiunea este %ld\n", metadata.st_size);
-            sprintf(aux5, "Permisiunile sunt %s\n", array_innode[size_array - 1].permission);
+            sprintf(aux5, "Permisiunile sunt %s\n", array_inode[size_array - 1].permission);
             sprintf(aux4, "Data ultimei modifcari este %s\n\n", time);
             if (close(prev_snapfd) < 0)
             {
@@ -372,7 +372,7 @@ void parse_director(char *dir_path, int nr_rulari, char *snap, char *prev_snap, 
             read(prev_snapfd, v, size_v * sizeof(File_Info));
             for (j = 0; j < size_v; j++)
             {
-                if (v[j].innode == metadata.st_ino)
+                if (v[j].inode == metadata.st_ino)
                 {
                     break;
                 }
@@ -388,8 +388,8 @@ void parse_director(char *dir_path, int nr_rulari, char *snap, char *prev_snap, 
                 strcpy(v[size_v - 1].path, path);
                 v[size_v - 1].size = metadata.st_size;
                 strcpy(v[size_v - 1].last_modify, time);
-                v[size_v - 1].innode = metadata.st_ino;
-                strcpy(v[size_v - 1].permission, array_innode[size_array - 1].permission);
+                v[size_v - 1].inode = metadata.st_ino;
+                strcpy(v[size_v - 1].permission, array_inode[size_array - 1].permission);
                 if (S_ISDIR(type))
                     strcpy(v[size_v - 1].tip, "director");
                 else
@@ -398,7 +398,7 @@ void parse_director(char *dir_path, int nr_rulari, char *snap, char *prev_snap, 
                 sprintf(aux, "Acest fisier este unul nou si este un %s, iar numele sau este %s\nCaracteristicile sunt: \n", v[size_v - 1].tip, path);
                 sprintf(aux2, "In_nod-ul este %ld\n", metadata.st_ino);
                 sprintf(aux3, "Dimensiunea este %ld\n", metadata.st_size);
-                sprintf(aux5, "Permisiunile sunt %s\n", array_innode[size_array - 1].permission);
+                sprintf(aux5, "Permisiunile sunt %s\n", array_inode[size_array - 1].permission);
                 sprintf(aux4, "Data ultimei modifcari este %s\n\n", time);
             }
             else
@@ -428,13 +428,13 @@ void parse_director(char *dir_path, int nr_rulari, char *snap, char *prev_snap, 
                     sprintf(aux4, "Data ultimei modifcari din interior este %s\n\n", time);
 
                 sprintf(aux2, "In_nod-ul este %ld\n", metadata.st_ino);
-                if (strcmp(v[j].permission, array_innode[size_array - 1].permission) != 0)
+                if (strcmp(v[j].permission, array_inode[size_array - 1].permission) != 0)
                 {
-                    sprintf(aux5, "Permisiunile s au modificat din %s in %s\n", v[j].permission, array_innode[size_array - 1].permission);
-                    strcpy(v[j].permission, array_innode[size_array - 1].permission);
+                    sprintf(aux5, "Permisiunile s au modificat din %s in %s\n", v[j].permission, array_inode[size_array - 1].permission);
+                    strcpy(v[j].permission, array_inode[size_array - 1].permission);
                 }
                 else
-                    sprintf(aux5, "Permisiunile sunt %s\n", array_innode[size_array - 1].permission);
+                    sprintf(aux5, "Permisiunile sunt %s\n", array_inode[size_array - 1].permission);
             }
             lseek(prev_snapfd, 0, SEEK_SET);
             if ((write(prev_snapfd, &size_v, sizeof(int))) < 0)
@@ -529,14 +529,14 @@ void parse_and_delete(char *dir_path, int nr_rulari, char *director, char *numeS
         {
             int ok = 1; // presupun ca la rularea curenta s a sters un fisier
             for (int j = 0; j < size_array && ok == 1; j++)
-                if (v[i].innode == array_innode[j].innode)
+                if (v[i].inode == array_inode[j].inode)
                 {
                     ok = 0;
                 }
             if (ok == 1)
             {
                 char str[500];
-                sprintf(str, "Fata de rularea anterioara s-a sters fisierul cu denumirea %s si innode-ul %ld\n\n", v[i].path, v[i].innode);
+                sprintf(str, "Fata de rularea anterioara s-a sters fisierul cu denumirea %s si inode-ul %ld\n\n", v[i].path, v[i].inode);
                 if ((write(snapfd, str, strlen(str))) < 0)
                 {
                     perror(NULL);

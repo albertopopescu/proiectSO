@@ -1,7 +1,7 @@
 Numele directorului este test_ex2
 In_nod-ul este 1291433
 Dimensiunea este 4096
-Data ultimei modifcari din interior este 2024-05-11 01:27:59
+Data ultimei modifcari din interior este 2024-05-11 16:30:52
 
 Numele este test_ex2/ds, iar tipul sau este director
 Caracteristicile sunt: 
@@ -16,13 +16,6 @@ In_nod-ul este 1291469
 Dimensiunea este 0
 Permisiunile sunt -rw-rw-r--
 Data ultimei modifcari din interior este 2024-05-11 01:28:02
-
-Numele este test_ex2/dcc, iar tipul sau este file
-Caracteristicile sunt: 
-In_nod-ul este 1291467
-Dimensiunea s-a modificat din 0 in 20146
-Permisiunile s au modificat din -rw-rw-r-- in ----------
-Data ultimei modifcari din interior s-a schimbat din 2024-05-11 01:27:56 in 2024-05-11 16:30:28
 
 Numele este test_ex2/aas, iar tipul sau este file
 Caracteristicile sunt: 

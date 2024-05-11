@@ -15,5 +15,12 @@ Caracteristicile sunt:
 In_nod-ul este 1291224
 Dimensiunea este 4096
 Permisiunile sunt drwxrwxr-x
-Data ultimei modifcari din interior este 2024-05-10 13:53:31
+Data ultimei modifcari din interior este 2024-05-11 16:59:20
+
+Numele este test_ex3/a/p, iar tipul sau este file
+Caracteristicile sunt: 
+In_nod-ul este 1323640
+Dimensiunea este 0
+Permisiunile sunt -rw-rw-r--
+Data ultimei modifcari din interior este 2024-05-11 16:59:20
 
