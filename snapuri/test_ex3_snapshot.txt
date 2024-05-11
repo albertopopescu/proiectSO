@@ -7,11 +7,13 @@ Numele este test_ex3/saddasdas, iar tipul sau este file
 Caracteristicile sunt: 
 In_nod-ul este 1291272
 Dimensiunea este 0
+Permisiunile sunt -rwxrwxrwx
 Data ultimei modifcari din interior este 2024-05-09 20:38:15
 
 Numele este test_ex3/a, iar tipul sau este director
 Caracteristicile sunt: 
 In_nod-ul este 1291224
 Dimensiunea este 4096
+Permisiunile sunt drwxrwxr-x
 Data ultimei modifcari din interior este 2024-05-10 13:53:31
 
