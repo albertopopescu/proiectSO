@@ -12,7 +12,6 @@ if [ ! -f "$file" ]; then
     exit 1
 fi
 
-
 chmod 777 "$file"
 
 lines=$(wc -l < "$file")

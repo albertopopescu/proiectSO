@@ -69,7 +69,7 @@ Data ultimei modifcari din interior este 2024-05-09 20:38:15
 Numele este test_ex1/1, iar tipul sau este file
 Caracteristicile sunt: 
 In_nod-ul este 1291182
-Dimensiunea este 17
+Dimensiunea s-a modificat din 17 in 26
 Permisiunile sunt -rw-rw-r--
-Data ultimei modifcari din interior este 2024-05-09 20:38:15
+Data ultimei modifcari din interior s-a schimbat din 2024-05-09 20:38:15 in 2024-05-11 23:38:10
 
