@@ -1,26 +1,26 @@
 Numele directorului este test_ex2
-In_nod-ul este 1291433
+In_nod-ul este 844424930888665
 Dimensiunea este 4096
-Data ultimei modifcari din interior este 2024-05-11 16:30:52
-
-Numele este test_ex2/ds, iar tipul sau este director
-Caracteristicile sunt: 
-In_nod-ul este 1291468
-Dimensiunea este 4096
-Permisiunile sunt drwxrwxr-x
-Data ultimei modifcari din interior este 2024-05-11 01:28:02
-
-Numele este test_ex2/ds/qwe, iar tipul sau este file
-Caracteristicile sunt: 
-In_nod-ul este 1291469
-Dimensiunea este 0
-Permisiunile sunt -rw-rw-r--
-Data ultimei modifcari din interior este 2024-05-11 01:28:02
+Data ultimei modifcari din interior este 2024-06-20 17:59:52
 
 Numele este test_ex2/aas, iar tipul sau este file
 Caracteristicile sunt: 
-In_nod-ul este 1291465
+In_nod-ul este 844424930888666
 Dimensiunea este 0
-Permisiunile sunt -rw-rw-r--
-Data ultimei modifcari din interior este 2024-05-11 01:27:53
+Permisiunile sunt -rwxrwxrwx
+Data ultimei modifcari din interior este 2024-06-20 17:59:52
+
+Numele este test_ex2/ds, iar tipul sau este director
+Caracteristicile sunt: 
+In_nod-ul este 844424930888667
+Dimensiunea este 4096
+Permisiunile sunt drwxrwxrwx
+Data ultimei modifcari din interior este 2024-06-20 17:59:52
+
+Numele este test_ex2/ds/qwe, iar tipul sau este file
+Caracteristicile sunt: 
+In_nod-ul este 844424930888668
+Dimensiunea este 0
+Permisiunile sunt -rwxrwxrwx
+Data ultimei modifcari din interior este 2024-06-20 17:59:52
 

@@ -1,26 +1,33 @@
 Numele directorului este test_ex3
-In_nod-ul este 1291200
+In_nod-ul este 844424930888669
 Dimensiunea este 4096
-Data ultimei modifcari din interior este 2024-05-09 23:40:20
-
-Numele este test_ex3/saddasdas, iar tipul sau este file
-Caracteristicile sunt: 
-In_nod-ul este 1291272
-Dimensiunea este 0
-Permisiunile sunt -rwxrwxrwx
-Data ultimei modifcari din interior este 2024-05-09 20:38:15
+Data ultimei modifcari din interior este 2024-06-20 18:00:22
 
 Numele este test_ex3/a, iar tipul sau este director
 Caracteristicile sunt: 
-In_nod-ul este 1291224
+In_nod-ul este 844424930888670
 Dimensiunea este 4096
-Permisiunile sunt drwxrwxr-x
-Data ultimei modifcari din interior este 2024-05-11 16:59:20
+Permisiunile sunt drwxrwxrwx
+Data ultimei modifcari din interior este 2024-06-20 17:59:52
 
 Numele este test_ex3/a/p, iar tipul sau este file
 Caracteristicile sunt: 
-In_nod-ul este 1323640
+In_nod-ul este 844424930888671
 Dimensiunea este 0
-Permisiunile sunt -rw-rw-r--
-Data ultimei modifcari din interior este 2024-05-11 16:59:20
+Permisiunile sunt -rwxrwxrwx
+Data ultimei modifcari din interior este 2024-06-20 17:59:52
+
+Numele este test_ex3/ana, iar tipul sau este file
+Caracteristicile sunt: 
+In_nod-ul este 1970324837358871
+Dimensiunea este 8
+Permisiunile sunt -rwxrwxrwx
+Data ultimei modifcari din interior este 2024-06-20 18:00:25
+
+Numele este test_ex3/saddasdas, iar tipul sau este file
+Caracteristicile sunt: 
+In_nod-ul este 844424930888672
+Dimensiunea este 0
+Permisiunile sunt -rwxrwxrwx
+Data ultimei modifcari din interior este 2024-06-20 17:59:52
 
